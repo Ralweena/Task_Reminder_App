@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="preloaded_fonts" translatable="false">
+        <item>@font/amaranth</item>
+        <item>@font/andika_new_basic</item>
+        <item>@font/arima_madurai</item>
+        <item>@font/artifika</item>
+        <item>@font/averia_serif_libre</item>
+    </array>
+</resources>
