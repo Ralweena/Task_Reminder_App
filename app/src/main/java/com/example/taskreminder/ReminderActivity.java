@@ -73,7 +73,12 @@ public class ReminderActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Please select date and time", Toast.LENGTH_SHORT).show();
                     }
                     else {
-                        processinsert(title, date, time);
+                        try {
+                            processinsert(title, date, time);
+                        }
+                        catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
@@ -125,15 +130,24 @@ public class ReminderActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    private void processinsert(String title, String date, String time) {
-        Bundle categoryBundle = getIntent().getExtras();
-        String category = categoryBundle.getString("category");
-        //inserts the title,date,time into sql lite database
-        String result = new dbManager(this).addreminder(title, date, time, category);
-        Titledit.setText("");
-        Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
-        // Setting Alarm
-        setAlarm(title);
+    private void processinsert(String title, String date, String time) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date1 = sdf.parse(time);
+        long alarmTimeInMillis = date1.getTime();
+        if (alarmTimeInMillis <= System.currentTimeMillis())
+        {
+            Toast.makeText(this,"You can't set alarm for past",Toast.LENGTH_LONG).show();
+        }
+        else {
+            Bundle categoryBundle = getIntent().getExtras();
+            String category = categoryBundle.getString("category");
+            //inserts the title,date,time into sql lite database
+            String result = new dbManager(this).addreminder(title, date, time, category);
+            Titledit.setText("");
+            Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+            // Setting Alarm
+            setAlarm(title);
+        }
     }
 
     private void setAlarm(String title) {
